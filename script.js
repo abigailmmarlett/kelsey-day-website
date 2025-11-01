@@ -99,12 +99,58 @@ if (contactForm) {
         // Simulate form submission
         console.log('Form submitted:', formData);
         
-        // Show success message (in a real app, this would be after successful API call)
-        alert('Thank you for your message! We will get back to you soon.');
+        // Show success message with a custom notification
+        showNotification('Thank you for your message! We will get back to you soon.', 'success');
         
         // Reset form
         contactForm.reset();
     });
+}
+
+// Custom notification system
+function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        max-width: 350px;
+    `;
+    
+    // Add animation keyframes if not already added
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
 }
 
 // Gallery modal functionality (optional enhancement)
